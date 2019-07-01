@@ -94,17 +94,20 @@
 
 
 
-  <meta name="description" content="扬帆起航">
+  <meta name="description" content="首先我们看下Netflix官方给的图 注册中心eureka开启eureka服务端很简单,只需要在添加注解@EnableEurekaServer即可。一般来说添加一个注解开启一个功能,主要是通过import导入一个configuration.我们可以看到@EnableEurekaServer注解其实是引入了EurekaServerConfiguration配置。我们看下里面配置了哪些内容。 首先我们">
+<meta name="keywords" content="springcloud,eureka">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello">
-<meta property="og:url" content="http://yoursite.com/2019/06/24/hello/index.html">
+<meta property="og:title" content="springcloud 注册中心">
+<meta property="og:url" content="http://yoursite.com/2019/07/01/eurekaserver/index.html">
 <meta property="og:site_name" content="老实人保护协会">
-<meta property="og:description" content="扬帆起航">
+<meta property="og:description" content="首先我们看下Netflix官方给的图 注册中心eureka开启eureka服务端很简单,只需要在添加注解@EnableEurekaServer即可。一般来说添加一个注解开启一个功能,主要是通过import导入一个configuration.我们可以看到@EnableEurekaServer注解其实是引入了EurekaServerConfiguration配置。我们看下里面配置了哪些内容。 首先我们">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-24T02:03:55.600Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg">
+<meta property="og:updated_time" content="2019-07-01T15:38:06.864Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hello">
-<meta name="twitter:description" content="扬帆起航">
+<meta name="twitter:title" content="springcloud 注册中心">
+<meta name="twitter:description" content="首先我们看下Netflix官方给的图 注册中心eureka开启eureka服务端很简单,只需要在添加注解@EnableEurekaServer即可。一般来说添加一个注解开启一个功能,主要是通过import导入一个configuration.我们可以看到@EnableEurekaServer注解其实是引入了EurekaServerConfiguration配置。我们看下里面配置了哪些内容。 首先我们">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg">
 
 
 
@@ -112,7 +115,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/06/24/hello/">
+  <link rel="canonical" href="http://yoursite.com/2019/07/01/eurekaserver/">
 
 
 
@@ -122,7 +125,7 @@
   };
 </script>
 
-  <title>hello | 老实人保护协会</title>
+  <title>springcloud 注册中心 | 老实人保护协会</title>
   
 
 
@@ -338,7 +341,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/24/hello/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/01/eurekaserver/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王老实">
@@ -355,7 +358,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hello
+          <h1 class="post-title" itemprop="name headline">springcloud 注册中心
 
               
             
@@ -381,7 +384,7 @@
                 
               
 
-              <time title="创建时间：2019-06-24 10:03:43 / 修改时间：10:03:55" itemprop="dateCreated datePublished" datetime="2019-06-24T10:03:43+08:00">2019-06-24</time>
+              <time title="创建时间：2019-07-01 10:06:01 / 修改时间：23:38:06" itemprop="dateCreated datePublished" datetime="2019-07-01T10:06:01+08:00">2019-07-01</time>
             
 
             
@@ -391,6 +394,24 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springcloud源码分析/" itemprop="url" rel="index"><span itemprop="name">springcloud源码分析</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -427,7 +448,13 @@
       
 
       
-        <p>扬帆起航</p>
+        <p>首先我们看下Netflix官方给的图<br><img src="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg" alt="图"></p>
+<h2 id="注册中心eureka"><a href="#注册中心eureka" class="headerlink" title="注册中心eureka"></a>注册中心eureka</h2><p>开启eureka服务端很简单,只需要在添加注解<code>@EnableEurekaServer</code>即可。一般来说添加一个注解开启一个功能,主要是通过import导入一个configuration.我们可以看到<code>@EnableEurekaServer</code>注解其实是引入了<code>EurekaServerConfiguration</code>配置。我们看下里面配置了哪些内容。</p>
+<p>首先我们看到,里面配置了<code>EurekaServerConfigBeanConfiguration</code>,这个类会配置一个一份<code>EurekaServiceConfig</code>,里面包含了所有配置的enruka server属性。<br>配置了一个eureka的看板,通过看板我们能看到有多少个服务接入了server.<br>配置了一些eureka nodes，用来做高可用集群使用。<br>配置了注册中心,我们主要来看下这个注册中心. </p>
+<h2 id="注册中心-PeerAwareInstanceRegistryImpl"><a href="#注册中心-PeerAwareInstanceRegistryImpl" class="headerlink" title="注册中心 PeerAwareInstanceRegistryImpl"></a>注册中心 <code>PeerAwareInstanceRegistryImpl</code></h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p><code>register()</code></p>
+<h3 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h3><p><code>cancle()</code></p>
+<h3 id="续约"><a href="#续约" class="headerlink" title="续约"></a>续约</h3><p><code>renew()</code></p>
+<h3 id="定时清理"><a href="#定时清理" class="headerlink" title="定时清理"></a>定时清理</h3><p><code>evic()</code></p>
 
       
     </div>
@@ -449,6 +476,17 @@
 
     <footer class="post-footer">
       
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/springcloud/" rel="tag"># springcloud</a>
+          
+            <a href="/tags/eureka/" rel="tag"># eureka</a>
+          
+        </div>
+      
 
       
       
@@ -458,15 +496,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/06/24/hello/" rel="next" title="hello">
+                <i class="fa fa-chevron-left"></i> hello
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/01/eurekaserver/" rel="prev" title="springcloud 注册中心">
-                springcloud 注册中心 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -510,8 +548,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -602,6 +649,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注册中心eureka"><span class="nav-number">1.</span> <span class="nav-text">注册中心eureka</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册中心-PeerAwareInstanceRegistryImpl"><span class="nav-number">2.</span> <span class="nav-text">注册中心 PeerAwareInstanceRegistryImpl</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册"><span class="nav-number">2.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注销"><span class="nav-number">2.2.</span> <span class="nav-text">注销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#续约"><span class="nav-number">2.3.</span> <span class="nav-text">续约</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时清理"><span class="nav-number">2.4.</span> <span class="nav-text">定时清理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
