@@ -94,17 +94,18 @@
 
 
 
-  <meta name="description" content="扬帆起航">
+  <meta name="description" content="hashmap 为什么设置桶个数大于8转为红黑树时间和空间的平衡 为什么要转换要弄明白这个问题，我们首先要明白为什么要转换，这个问题比较简单，因为Map中桶的元素初始化是链表保存的，其查找性能是O(n)，而树结构能将查找性能提升到O(log(n))。当链表长度很小的时候，即使遍历，速度也非常快，但是当链表长度不断变长，肯定会对查询性能有一定的影响，所以才需要转成树。源码中有一段话: 1234567">
+<meta name="keywords" content="hashmap">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello">
-<meta property="og:url" content="http://yoursite.com/2019/06/24/hello/index.html">
+<meta property="og:title" content="hashmap 为什么设置桶个数大于8转为红黑树">
+<meta property="og:url" content="http://yoursite.com/2019/09/28/hashmap-treeify-threhold/index.html">
 <meta property="og:site_name" content="老实人保护协会">
-<meta property="og:description" content="扬帆起航">
+<meta property="og:description" content="hashmap 为什么设置桶个数大于8转为红黑树时间和空间的平衡 为什么要转换要弄明白这个问题，我们首先要明白为什么要转换，这个问题比较简单，因为Map中桶的元素初始化是链表保存的，其查找性能是O(n)，而树结构能将查找性能提升到O(log(n))。当链表长度很小的时候，即使遍历，速度也非常快，但是当链表长度不断变长，肯定会对查询性能有一定的影响，所以才需要转成树。源码中有一段话: 1234567">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-24T02:03:55.600Z">
+<meta property="og:updated_time" content="2019-09-28T10:04:19.735Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hello">
-<meta name="twitter:description" content="扬帆起航">
+<meta name="twitter:title" content="hashmap 为什么设置桶个数大于8转为红黑树">
+<meta name="twitter:description" content="hashmap 为什么设置桶个数大于8转为红黑树时间和空间的平衡 为什么要转换要弄明白这个问题，我们首先要明白为什么要转换，这个问题比较简单，因为Map中桶的元素初始化是链表保存的，其查找性能是O(n)，而树结构能将查找性能提升到O(log(n))。当链表长度很小的时候，即使遍历，速度也非常快，但是当链表长度不断变长，肯定会对查询性能有一定的影响，所以才需要转成树。源码中有一段话: 1234567">
 
 
 
@@ -112,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/06/24/hello/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/28/hashmap-treeify-threhold/">
 
 
 
@@ -122,7 +123,7 @@
   };
 </script>
 
-  <title>hello | 老实人保护协会</title>
+  <title>hashmap 为什么设置桶个数大于8转为红黑树 | 老实人保护协会</title>
   
 
 
@@ -338,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/24/hello/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/hashmap-treeify-threhold/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王老实">
@@ -355,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hello
+          <h1 class="post-title" itemprop="name headline">hashmap 为什么设置桶个数大于8转为红黑树
 
               
             
@@ -381,7 +382,7 @@
                 
               
 
-              <time title="创建时间：2019-06-24 10:03:43 / 修改时间：10:03:55" itemprop="dateCreated datePublished" datetime="2019-06-24T10:03:43+08:00">2019-06-24</time>
+              <time title="创建时间：2019-09-28 17:28:33 / 修改时间：18:04:19" itemprop="dateCreated datePublished" datetime="2019-09-28T17:28:33+08:00">2019-09-28</time>
             
 
             
@@ -391,6 +392,31 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/data-structure/" itemprop="url" rel="index"><span itemprop="name">data structure</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/data-structure/hashmap/" itemprop="url" rel="index"><span itemprop="name">hashmap</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -427,7 +453,11 @@
       
 
       
-        <p>扬帆起航</p>
+        <h2 id="hashmap-为什么设置桶个数大于8转为红黑树"><a href="#hashmap-为什么设置桶个数大于8转为红黑树" class="headerlink" title="hashmap 为什么设置桶个数大于8转为红黑树"></a>hashmap 为什么设置桶个数大于8转为红黑树</h2><p>时间和空间的平衡</p>
+<h3 id="为什么要转换"><a href="#为什么要转换" class="headerlink" title="为什么要转换"></a>为什么要转换</h3><p>要弄明白这个问题，我们首先要明白为什么要转换，这个问题比较简单，因为Map中桶的元素初始化是链表保存的，其查找性能是O(n)，而树结构能将查找性能提升到O(log(n))。当链表长度很小的时候，即使遍历，速度也非常快，但是当链表长度不断变长，肯定会对查询性能有一定的影响，所以才需要转成树。<br>源码中有一段话:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">* Because TreeNodes are about twice the size of regular nodes, we</span><br><span class="line">* use them only when bins contain enough nodes to warrant use</span><br><span class="line">* (see TREEIFY_THRESHOLD). <span class="function">And when they become too <span class="title">small</span> <span class="params">(due to</span></span></span><br><span class="line"><span class="function"><span class="params">* removal or resizing)</span> they are converted back to plain bins.  In</span></span><br><span class="line"><span class="function">* usages with well-distributed user hashCodes, tree bins are</span></span><br><span class="line"><span class="function">* rarely used.  Ideally, under random hashCodes, the frequency of</span></span><br><span class="line"><span class="function">* nodes in bins follows a Poisson distribution</span></span><br><span class="line"><span class="function">* <span class="params">(http://en.wikipedia.org/wiki/Poisson_distribution)</span> with a</span></span><br><span class="line"><span class="function">* parameter of about 0.5 on average <span class="keyword">for</span> the <span class="keyword">default</span> resizing</span></span><br><span class="line"><span class="function">* threshold of 0.75, although with a large variance because of</span></span><br><span class="line"><span class="function">* resizing granularity. Ignoring variance, the expected</span></span><br><span class="line"><span class="function">* occurrences of list size k <span class="title">are</span> <span class="params">(exp(<span class="number">-0.5</span>)</span> * <span class="title">pow</span><span class="params">(<span class="number">0.5</span>, k)</span> /</span></span><br><span class="line"><span class="function">* <span class="title">factorial</span><span class="params">(k)</span>). The first values are:</span></span><br><span class="line"><span class="function">*</span></span><br><span class="line"><span class="function">* 0:    0.60653066</span></span><br><span class="line"><span class="function">* 1:    0.30326533</span></span><br><span class="line"><span class="function">* 2:    0.07581633</span></span><br><span class="line"><span class="function">* 3:    0.01263606</span></span><br><span class="line"><span class="function">* 4:    0.00157952</span></span><br><span class="line"><span class="function">* 5:    0.00015795</span></span><br><span class="line"><span class="function">* 6:    0.00001316</span></span><br><span class="line"><span class="function">* 7:    0.00000094</span></span><br><span class="line"><span class="function">* 8:    0.00000006</span></span><br><span class="line"><span class="function">* more: less than 1 in ten million</span></span><br></pre></td></tr></table></figure>
+
+<p>因为bin的大小几乎不能为8个,如果为8个说明hash取的不好,分配的过于不均匀</p>
 
       
     </div>
@@ -449,6 +479,15 @@
 
     <footer class="post-footer">
       
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/hashmap/" rel="tag"># hashmap</a>
+          
+        </div>
+      
 
       
       
@@ -458,15 +497,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/09/28/hashmap_tableSizeFor/" rel="next" title="hashmap 如何把大小设置为2的幂次方">
+                <i class="fa fa-chevron-left"></i> hashmap 如何把大小设置为2的幂次方
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/01/eurekaserver/" rel="prev" title="springcloud 注册中心">
-                springcloud 注册中心 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -510,8 +549,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -642,6 +690,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hashmap-为什么设置桶个数大于8转为红黑树"><span class="nav-number">1.</span> <span class="nav-text">hashmap 为什么设置桶个数大于8转为红黑树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要转换"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要转换</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
