@@ -1,0 +1,4 @@
+hexo g
+hexo d
+
+
