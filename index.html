@@ -1681,6 +1681,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/07/01/eurekaclient/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王老实">
+      <meta itemprop="description" content="少壮不努力,老大徒伤悲">
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实人保护协会">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/01/eurekaclient/" class="post-title-link" itemprop="url">springcloud 客户端</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-01 10:06:01" itemprop="dateCreated datePublished" datetime="2019-07-01T10:06:01+08:00">2019-07-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-05 15:50:06" itemprop="dateModified" datetime="2019-07-05T15:50:06+08:00">2019-07-05</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springcloud源码分析/" itemprop="url" rel="index"><span itemprop="name">springcloud源码分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>首先我们看下Netflix官方给的图<br><img src="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg" alt="图"></p>
+<h2 id="eureka-client"><a href="#eureka-client" class="headerlink" title="eureka client"></a>eureka client</h2><p>引入eureka client 会自动配置<code>EurekaClientAutoConfiguration</code>。我们看下里面配置了什么内容。</p>
+<p><code>EurekaClientAutoConfiguration</code> 主要是生成了一个<code>DiscoveryClient</code>类。<br><code>DiscoveryClient.initScheduledTasks()</code>初始化的过程中,会启动一些定时任务,来触发客户端操作</p>
+<h3 id="服务注册-续约"><a href="#服务注册-续约" class="headerlink" title="服务注册 续约"></a>服务注册 续约</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initScheduledTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 如果允许获取注册信息,那么拉取注册信息到本地</span></span><br><span class="line">        <span class="keyword">if</span> (clientConfig.shouldFetchRegistry()) &#123;</span><br><span class="line">            <span class="comment">// registry cache refresh timer</span></span><br><span class="line">            <span class="keyword">int</span> registryFetchIntervalSeconds = clientConfig.getRegistryFetchIntervalSeconds();</span><br><span class="line">            <span class="keyword">int</span> expBackOffBound = clientConfig.getCacheRefreshExecutorExponentialBackOffBound();</span><br><span class="line">            scheduler.schedule(</span><br><span class="line">                    <span class="keyword">new</span> TimedSupervisorTask(</span><br><span class="line">                            <span class="string">"cacheRefresh"</span>,</span><br><span class="line">                            scheduler,</span><br><span class="line">                            cacheRefreshExecutor,</span><br><span class="line">                            registryFetchIntervalSeconds,</span><br><span class="line">                            TimeUnit.SECONDS,</span><br><span class="line">                            expBackOffBound,</span><br><span class="line">                            <span class="keyword">new</span> CacheRefreshThread()</span><br><span class="line">                    ),</span><br><span class="line">                    registryFetchIntervalSeconds, TimeUnit.SECONDS);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">//如果允许注册到eureka，</span></span><br><span class="line">        <span class="keyword">if</span> (clientConfig.shouldRegisterWithEureka()) &#123;</span><br><span class="line">            <span class="keyword">int</span> renewalIntervalInSecs = instanceInfo.getLeaseInfo().getRenewalIntervalInSecs();</span><br><span class="line">            <span class="keyword">int</span> expBackOffBound = clientConfig.getHeartbeatExecutorExponentialBackOffBound();</span><br><span class="line">            logger.info(<span class="string">"Starting heartbeat executor: "</span> + <span class="string">"renew interval is: "</span> + renewalIntervalInSecs);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定时续约</span></span><br><span class="line">            <span class="comment">// Heartbeat timer</span></span><br><span class="line">            scheduler.schedule(</span><br><span class="line">                    <span class="keyword">new</span> TimedSupervisorTask(</span><br><span class="line">                            <span class="string">"heartbeat"</span>,</span><br><span class="line">                            scheduler,</span><br><span class="line">                            heartbeatExecutor,</span><br><span class="line">                            renewalIntervalInSecs,</span><br><span class="line">                            TimeUnit.SECONDS,</span><br><span class="line">                            expBackOffBound,</span><br><span class="line">                            <span class="keyword">new</span> HeartbeatThread()</span><br><span class="line">                    ),</span><br><span class="line">                    renewalIntervalInSecs, TimeUnit.SECONDS);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// InstanceInfo replicator</span></span><br><span class="line">            instanceInfoReplicator = <span class="keyword">new</span> InstanceInfoReplicator(</span><br><span class="line">                    <span class="keyword">this</span>,</span><br><span class="line">                    instanceInfo,</span><br><span class="line">                    clientConfig.getInstanceInfoReplicationIntervalSeconds(),</span><br><span class="line">                    <span class="number">2</span>); <span class="comment">// burstSize</span></span><br><span class="line"></span><br><span class="line">            statusChangeListener = <span class="keyword">new</span> ApplicationInfoManager.StatusChangeListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> String <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">"statusChangeListener"</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">(StatusChangeEvent statusChangeEvent)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (InstanceStatus.DOWN == statusChangeEvent.getStatus() ||</span><br><span class="line">                            InstanceStatus.DOWN == statusChangeEvent.getPreviousStatus()) &#123;</span><br><span class="line">                        <span class="comment">// log at warn level if DOWN was involved</span></span><br><span class="line">                        logger.warn(<span class="string">"Saw local status change event &#123;&#125;"</span>, statusChangeEvent);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        logger.info(<span class="string">"Saw local status change event &#123;&#125;"</span>, statusChangeEvent);</span><br><span class="line">                    &#125;</span><br><span class="line">                    instanceInfoReplicator.onDemandUpdate();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (clientConfig.shouldOnDemandUpdateStatusChange()) &#123;</span><br><span class="line">                applicationInfoManager.registerStatusChangeListener(statusChangeListener);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">           </span><br><span class="line"><span class="comment">//注册	         instanceInfoReplicator.start(clientConfig.getInitialInstanceInfoReplicationIntervalSeconds());</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"Not registering with Eureka server per configuration"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="服务下线"><a href="#服务下线" class="headerlink" title="服务下线"></a>服务下线</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (isShutdown.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">            logger.info(<span class="string">"Shutting down DiscoveryClient ..."</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (statusChangeListener != <span class="keyword">null</span> &amp;&amp; applicationInfoManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">                applicationInfoManager.unregisterStatusChangeListener(statusChangeListener.getId());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cancelScheduledTasks();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If APPINFO was registered</span></span><br><span class="line">            <span class="keyword">if</span> (applicationInfoManager != <span class="keyword">null</span> &amp;&amp; clientConfig.shouldRegisterWithEureka()) &#123;</span><br><span class="line">                applicationInfoManager.setInstanceStatus(InstanceStatus.DOWN);</span><br><span class="line">                unregister();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (eurekaTransport != <span class="keyword">null</span>) &#123;</span><br><span class="line">                eurekaTransport.shutdown();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            heartbeatStalenessMonitor.shutdown();</span><br><span class="line">            registryStalenessMonitor.shutdown();</span><br><span class="line"></span><br><span class="line">            logger.info(<span class="string">"Completed shut down of DiscoveryClient"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/07/01/eurekaserver/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1806,185 +1985,6 @@
 <h3 id="定时清理"><a href="#定时清理" class="headerlink" title="定时清理"></a>定时清理</h3><p><code>evic()</code></p>
 <h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p><code>PeerEurekaNodes</code> 包含了集群其他节点的信息<br><code>replicateToPeers</code>.将应用状态更新到其他节点</p>
 <h2 id="注册接口"><a href="#注册接口" class="headerlink" title="注册接口"></a>注册接口</h2><p><code>ApplicationResource</code></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/07/01/eurekaclient/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="王老实">
-      <meta itemprop="description" content="少壮不努力,老大徒伤悲">
-      <meta itemprop="image" content="/images/logo.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="老实人保护协会">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/01/eurekaclient/" class="post-title-link" itemprop="url">springcloud 客户端</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-01 10:06:01" itemprop="dateCreated datePublished" datetime="2019-07-01T10:06:01+08:00">2019-07-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-05 15:50:06" itemprop="dateModified" datetime="2019-07-05T15:50:06+08:00">2019-07-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springcloud源码分析/" itemprop="url" rel="index"><span itemprop="name">springcloud源码分析</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>首先我们看下Netflix官方给的图<br><img src="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg" alt="图"></p>
-<h2 id="eureka-client"><a href="#eureka-client" class="headerlink" title="eureka client"></a>eureka client</h2><p>引入eureka client 会自动配置<code>EurekaClientAutoConfiguration</code>。我们看下里面配置了什么内容。</p>
-<p><code>EurekaClientAutoConfiguration</code> 主要是生成了一个<code>DiscoveryClient</code>类。<br><code>DiscoveryClient.initScheduledTasks()</code>初始化的过程中,会启动一些定时任务,来触发客户端操作</p>
-<h3 id="服务注册-续约"><a href="#服务注册-续约" class="headerlink" title="服务注册 续约"></a>服务注册 续约</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initScheduledTasks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 如果允许获取注册信息,那么拉取注册信息到本地</span></span><br><span class="line">        <span class="keyword">if</span> (clientConfig.shouldFetchRegistry()) &#123;</span><br><span class="line">            <span class="comment">// registry cache refresh timer</span></span><br><span class="line">            <span class="keyword">int</span> registryFetchIntervalSeconds = clientConfig.getRegistryFetchIntervalSeconds();</span><br><span class="line">            <span class="keyword">int</span> expBackOffBound = clientConfig.getCacheRefreshExecutorExponentialBackOffBound();</span><br><span class="line">            scheduler.schedule(</span><br><span class="line">                    <span class="keyword">new</span> TimedSupervisorTask(</span><br><span class="line">                            <span class="string">"cacheRefresh"</span>,</span><br><span class="line">                            scheduler,</span><br><span class="line">                            cacheRefreshExecutor,</span><br><span class="line">                            registryFetchIntervalSeconds,</span><br><span class="line">                            TimeUnit.SECONDS,</span><br><span class="line">                            expBackOffBound,</span><br><span class="line">                            <span class="keyword">new</span> CacheRefreshThread()</span><br><span class="line">                    ),</span><br><span class="line">                    registryFetchIntervalSeconds, TimeUnit.SECONDS);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">//如果允许注册到eureka，</span></span><br><span class="line">        <span class="keyword">if</span> (clientConfig.shouldRegisterWithEureka()) &#123;</span><br><span class="line">            <span class="keyword">int</span> renewalIntervalInSecs = instanceInfo.getLeaseInfo().getRenewalIntervalInSecs();</span><br><span class="line">            <span class="keyword">int</span> expBackOffBound = clientConfig.getHeartbeatExecutorExponentialBackOffBound();</span><br><span class="line">            logger.info(<span class="string">"Starting heartbeat executor: "</span> + <span class="string">"renew interval is: "</span> + renewalIntervalInSecs);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定时续约</span></span><br><span class="line">            <span class="comment">// Heartbeat timer</span></span><br><span class="line">            scheduler.schedule(</span><br><span class="line">                    <span class="keyword">new</span> TimedSupervisorTask(</span><br><span class="line">                            <span class="string">"heartbeat"</span>,</span><br><span class="line">                            scheduler,</span><br><span class="line">                            heartbeatExecutor,</span><br><span class="line">                            renewalIntervalInSecs,</span><br><span class="line">                            TimeUnit.SECONDS,</span><br><span class="line">                            expBackOffBound,</span><br><span class="line">                            <span class="keyword">new</span> HeartbeatThread()</span><br><span class="line">                    ),</span><br><span class="line">                    renewalIntervalInSecs, TimeUnit.SECONDS);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// InstanceInfo replicator</span></span><br><span class="line">            instanceInfoReplicator = <span class="keyword">new</span> InstanceInfoReplicator(</span><br><span class="line">                    <span class="keyword">this</span>,</span><br><span class="line">                    instanceInfo,</span><br><span class="line">                    clientConfig.getInstanceInfoReplicationIntervalSeconds(),</span><br><span class="line">                    <span class="number">2</span>); <span class="comment">// burstSize</span></span><br><span class="line"></span><br><span class="line">            statusChangeListener = <span class="keyword">new</span> ApplicationInfoManager.StatusChangeListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> String <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">"statusChangeListener"</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">(StatusChangeEvent statusChangeEvent)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (InstanceStatus.DOWN == statusChangeEvent.getStatus() ||</span><br><span class="line">                            InstanceStatus.DOWN == statusChangeEvent.getPreviousStatus()) &#123;</span><br><span class="line">                        <span class="comment">// log at warn level if DOWN was involved</span></span><br><span class="line">                        logger.warn(<span class="string">"Saw local status change event &#123;&#125;"</span>, statusChangeEvent);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        logger.info(<span class="string">"Saw local status change event &#123;&#125;"</span>, statusChangeEvent);</span><br><span class="line">                    &#125;</span><br><span class="line">                    instanceInfoReplicator.onDemandUpdate();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (clientConfig.shouldOnDemandUpdateStatusChange()) &#123;</span><br><span class="line">                applicationInfoManager.registerStatusChangeListener(statusChangeListener);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">           </span><br><span class="line"><span class="comment">//注册	         instanceInfoReplicator.start(clientConfig.getInitialInstanceInfoReplicationIntervalSeconds());</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"Not registering with Eureka server per configuration"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="服务下线"><a href="#服务下线" class="headerlink" title="服务下线"></a>服务下线</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (isShutdown.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">            logger.info(<span class="string">"Shutting down DiscoveryClient ..."</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (statusChangeListener != <span class="keyword">null</span> &amp;&amp; applicationInfoManager != <span class="keyword">null</span>) &#123;</span><br><span class="line">                applicationInfoManager.unregisterStatusChangeListener(statusChangeListener.getId());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            cancelScheduledTasks();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If APPINFO was registered</span></span><br><span class="line">            <span class="keyword">if</span> (applicationInfoManager != <span class="keyword">null</span> &amp;&amp; clientConfig.shouldRegisterWithEureka()) &#123;</span><br><span class="line">                applicationInfoManager.setInstanceStatus(InstanceStatus.DOWN);</span><br><span class="line">                unregister();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (eurekaTransport != <span class="keyword">null</span>) &#123;</span><br><span class="line">                eurekaTransport.shutdown();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            heartbeatStalenessMonitor.shutdown();</span><br><span class="line">            registryStalenessMonitor.shutdown();</span><br><span class="line"></span><br><span class="line">            logger.info(<span class="string">"Completed shut down of DiscoveryClient"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
 
           
         
