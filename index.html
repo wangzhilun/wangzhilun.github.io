@@ -1331,6 +1331,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/09/28/tomcat_jiagou/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王老实">
+      <meta itemprop="description" content="少壮不努力,老大徒伤悲">
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老实人保护协会">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/28/tomcat_jiagou/" class="post-title-link" itemprop="url">tomcat架构概览</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-28 10:06:01" itemprop="dateCreated datePublished" datetime="2019-09-28T10:06:01+08:00">2019-09-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-06-24 17:58:58" itemprop="dateModified" datetime="2020-06-24T17:58:58+08:00">2020-06-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tomcat/" itemprop="url" rel="index"><span itemprop="name">tomcat</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="tomcat架构"><a href="#tomcat架构" class="headerlink" title="tomcat架构"></a>tomcat架构</h2><p>web需要做的事情:</p>
+<ul>
+<li>协议解析</li>
+<li>业务处理<br>因此tomcat设计了两个核心组件连接器<code>Connector</code>和容器<code>Container</code>来分别做两件事情。连接器负责对外交流,容器负责内部处理。</li>
+</ul>
+<h3 id="连接器"><a href="#连接器" class="headerlink" title="连接器"></a>连接器</h3><p>连接器和容器要结合起来对外提供服务,tomcat有个组件将他们组合起来<code>service</code>.一个tomcat可以有多个service,可以实现不同的端口号来访问同一台机器上部署的不同应用。<br><img src="https://raw.githubusercontent.com/wangzhilun/img/master/20200416165039.png" alt="service"></p>
+<p><code>Connector</code>处理的工作又可以分为网路通信,协议解析,与容器交互。因此tomcat设计了3个组件和实现这个3个功能,分别是<code>Endpoint</code>,<code>Processor</code>,<code>Adapter</code>。  
+<code>Endpoint</code>负责提供字节流给<code>processor</code>,<code>processor</code>解析相关的协议,封装成Tomcat Request对象给<code>Adapter</code>，<code>Adapter</code>负责提供ServletRequest对象给容器。因为io模型和应用层协议可以自由组合,tomcat将<code>Endpoint</code>和<code>Processor</code>放在一起考虑,设计了一个组件<code>ProtocolHandler</code>。  
+<img src="https://raw.githubusercontent.com/wangzhilun/img/master/20200416165636.png" alt="连接器"></p>
+<p>tomcatio模型为reactor模式,<code>Endpoint</code>有两个子组件<code>Acceptor</code>和<code>SocketProcessor</code>，<code>SocketProcessor</code>提交到线程池来执行。</p>
+<p><img src="https://raw.githubusercontent.com/wangzhilun/img/master/endpoint.png" alt="endpoint"></p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>tomcat容器采用分层架构,每层处理响应的事情。分别是Engine,Host,Context和Wrapper.<br>这四种容器不是平行关系,是父子关系。</p>
+<p><img src="https://raw.githubusercontent.com/wangzhilun/img/master/tomcatcontainer.png" alt="container"></p>
+<h4 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h4><p>根据<code>Engine</code>类上面的注释我们可以了解到,它在两种场景下产生作用:</p>
+<ul>
+<li>想通过拦截器来查询所有引擎对单个请求的处理</li>
+<li>想运行一个单http连接器,但是想支持所有的虚拟url请求<br>通常我们是不需要使用engine的。<h4 id="host"><a href="#host" class="headerlink" title="host"></a>host</h4>域名处理。tomcat可以根据不同的域名访问不同的context。可以根据不同的host转发到不同的context。<h4 id="context"><a href="#context" class="headerlink" title="context"></a>context</h4>我们部署的每个web应用其实最后被加载为了一个context。每个context有不同的context-path。context中持有servelet,根据不同的url请求到响应的servlet进行处理。<h4 id="wapper"><a href="#wapper" class="headerlink" title="wapper"></a>wapper</h4>具体处理业务逻辑的地方</li>
+</ul>
+<h4 id="定位一个servlet"><a href="#定位一个servlet" class="headerlink" title="定位一个servlet"></a>定位一个servlet</h4><p><img src="https://raw.githubusercontent.com/wangzhilun/img/master/tomcat-wrapper.png" alt="定位一个servlet过程"></p>
+<h3 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h3><p>tomcat所有容器都继承了一个相同的父类Container,从开始父类进行处理,处理完之后调用子Container。采用pipeline模式,pipeline持有一个<code>value</code>的链接。所以pipeline有一个getBasic方法,在value链的末端,负责调用子类的第一个value.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Valve</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> Valve <span class="title">getNext</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNext</span><span class="params">(Valve valve)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">invoke</span><span class="params">(Request request, Response response)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>value看起来跟filter的代码很像,value是tomcat私有的,filter是servlet规范支持的。</p>
+<p><img src="https://raw.githubusercontent.com/wangzhilun/img/master/tomcatpipeline.png" alt="pipeline"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/09/27/leetcode_towsum/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1845,187 +2041,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://laoshirenclub.com/2019/07/01/eurekaserver/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="王老实">
-      <meta itemprop="description" content="少壮不努力,老大徒伤悲">
-      <meta itemprop="image" content="/images/logo.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="老实人保护协会">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/01/eurekaserver/" class="post-title-link" itemprop="url">springcloud 注册中心</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-01 10:06:01" itemprop="dateCreated datePublished" datetime="2019-07-01T10:06:01+08:00">2019-07-01</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-05 16:01:09" itemprop="dateModified" datetime="2019-07-05T16:01:09+08:00">2019-07-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springcloud源码分析/" itemprop="url" rel="index"><span itemprop="name">springcloud源码分析</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>首先我们看下Netflix官方给的图<br><img src="https://raw.githubusercontent.com/wangzhilun/wangzhilun.github.io/master/image/netflix.jpg" alt="图"></p>
-<h2 id="注册中心eureka"><a href="#注册中心eureka" class="headerlink" title="注册中心eureka"></a>注册中心eureka</h2><p>开启eureka服务端很简单,只需要在添加注解<code>@EnableEurekaServer</code>即可。一般来说添加一个注解开启一个功能,主要是通过import导入一个configuration.我们可以看到<code>@EnableEurekaServer</code>注解其实是引入了<code>EurekaServerConfiguration</code>配置。我们看下里面配置了哪些内容。</p>
-<p>首先我们看到,里面配置了<code>EurekaServerConfigBeanConfiguration</code>,这个类会配置一个一份<code>EurekaServiceConfig</code>,里面包含了所有配置的enruka server属性。<br>配置了一个eureka的看板,通过看板我们能看到有多少个服务接入了server.<br>配置了一些eureka nodes，用来做高可用集群使用。<br>配置了注册中心,我们主要来看下这个注册中心. </p>
-<h2 id="注册中心-PeerAwareInstanceRegistryImpl"><a href="#注册中心-PeerAwareInstanceRegistryImpl" class="headerlink" title="注册中心 PeerAwareInstanceRegistryImpl"></a>注册中心 <code>PeerAwareInstanceRegistryImpl</code></h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p><code>register()</code></p>
-<h3 id="注销"><a href="#注销" class="headerlink" title="注销"></a>注销</h3><p><code>cancle()</code></p>
-<h3 id="续约"><a href="#续约" class="headerlink" title="续约"></a>续约</h3><p><code>renew()</code></p>
-<h3 id="定时清理"><a href="#定时清理" class="headerlink" title="定时清理"></a>定时清理</h3><p><code>evic()</code></p>
-<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p><code>PeerEurekaNodes</code> 包含了集群其他节点的信息<br><code>replicateToPeers</code>.将应用状态更新到其他节点</p>
-<h2 id="注册接口"><a href="#注册接口" class="headerlink" title="注册接口"></a>注册接口</h2><p><code>ApplicationResource</code></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2074,7 +2089,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2105,7 +2120,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2138,7 +2155,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
